@@ -1,0 +1,30 @@
+services:
+  mock-local:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: uvicorn mock_ml:app --host 0.0.0.0 --port 3003
+    environment:
+      - BACKEND_NAME=local
+
+  mock-remote:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: uvicorn mock_ml:app --host 0.0.0.0 --port 3003
+    environment:
+      - BACKEND_NAME=remote
+
+  router:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: uvicorn router:app --host 0.0.0.0 --port 3003
+    ports:
+      - "13003:3003"
+    environment:
+      - LOCAL_ML_URL=http://mock-local:3003
+      - REMOTE_ML_URL=http://mock-remote:3003
+    depends_on:
+      - mock-local
+      - mock-remote
