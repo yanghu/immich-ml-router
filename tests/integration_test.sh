@@ -37,8 +37,8 @@ check "GET /ping returns pong" \
 
 echo ""
 echo "-- Routing --"
-check "CLIP request routes to local backend" \
-    '"backend":"local"' \
+check "CLIP request routes to remote backend (PC online)" \
+    '"backend":"remote"' \
     "$(curl -sf -X POST "$ROUTER/predict" \
         -F 'entries={"clip":{"textual":{"modelName":"test","options":{}}}}' \
         -F 'text=dog in snow')"
